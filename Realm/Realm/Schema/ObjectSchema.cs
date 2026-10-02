@@ -286,7 +286,8 @@ namespace Realms.Schema
             [UnconditionalSuppressMessage("Trimming", "IL2070", Justification = "The RealmSchema lookup is only needed for classes woven by Fody or generated before IRealmObjectSchemaProvider existed.")]
             private static ObjectSchema? GetGeneratedSchema(Type type)
             {
-                var wovenAttribute = type.GetCustomAttribute<WovenAttribute>();
+                // inherit: false, to match the old GetField lookup, which did not see base class members
+                var wovenAttribute = type.GetCustomAttribute<WovenAttribute>(inherit: false);
                 if (wovenAttribute != null && Activator.CreateInstance(wovenAttribute.HelperType) is IRealmObjectSchemaProvider provider)
                 {
                     return provider.ObjectSchema;
